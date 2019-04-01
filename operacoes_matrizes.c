@@ -35,6 +35,8 @@ void main()
     ListaLinear *MyList;
     inicializa_lista(&MyList);
     declara_matriz(&MyList);
+    printf("Digite o nome da matriz para buscar: ");
+    setbuf(stdin, NULL);
     fgets(nome, 19, stdin);
     if(!imprime_uma_matriz(MyList, nome)){
         printf("Nao encontrado");
@@ -65,6 +67,7 @@ void declara_matriz(ListaLinear **N)
     Matriz mat;
 
     printf("Digite o nome da matriz: ");
+    setbuf(stdin, NULL);
     fgets(mat.nome_matriz, 19, stdin);
 
     printf("O nome da matriz é: %s", mat.nome_matriz);
@@ -136,11 +139,11 @@ void insere_inicio_lista(ListaLinear **N, Matriz matriz)
     *N = novo;
 }
 
+//PRONTA: Busca pelo nome e imprime uma matriz 
 int imprime_uma_matriz(ListaLinear *N, char *nome_matriz)
 {
     int achou = 0;
     ListaLinear *aux;
-
     for (aux = N; aux != NULL; aux = aux->prox)
     {
         if (!strcmp(aux->MD.nome_matriz,nome_matriz))
