@@ -212,6 +212,7 @@ int busca_matriz(ListaLinear *N, char *nome_matriz, ListaLinear **M)
     return 0;
 }
 
+//PROBLEMA: Matriz resposta sai vazia do for
 void operacao_basica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2, char sinal)
 {
     if ((M1->MD.totalL != M2->MD.totalL) || (M1->MD.totalC != M2->MD.totalC))
@@ -283,6 +284,7 @@ void operacao_basica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2, char sin
     }
 }
 
+//PRONTA: Inicializa Matriz Transposta
 int inicializa_matriz_resposta(int lin, int col, Matriz *mat)
 {
     mat->M = (float **)malloc(lin * sizeof(float));
@@ -302,6 +304,7 @@ int inicializa_matriz_resposta(int lin, int col, Matriz *mat)
     }
 }
 
+//PRONTA: Gera Transposta
 void matriz_transposta(ListaLinear **N, ListaLinear *M)
 {
     Matriz resp, m;
@@ -335,6 +338,7 @@ void matriz_transposta(ListaLinear **N, ListaLinear *M)
     }
 }
 
+//PRONTA: Imprime Diagonal
 void imprimir_diagonal(ListaLinear *M)
 {
     Matriz m;
