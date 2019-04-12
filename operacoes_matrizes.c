@@ -46,7 +46,7 @@ int main()
     {
         printf("\n1.Declarar Matriz\n2.Transpor Matriz\n3.Somar Matrizes\n4.Subtrair Matrizes\n");
         printf("5.Dividir matrizes\n6.Multiplicar Matrizes\n7.Imprimir Diagonal\n8.Imprimir Matriz\n");
-        printf("9.Destruir Matriz\n10.Listar matrizes\n0.Sair do Programa\nSelecione uma opção:: ");
+        printf("9.Destruir Matriz\n10.Listar matrizes\n0.Sair do Programa\nSelecione uma opção: ");
         scanf("%d", &opc);
         switch (opc)
         {
@@ -162,10 +162,13 @@ void declara_matriz(ListaLinear **N)
 {
     //Cria variavel do tipo Matriz
     Matriz mat;
+    ListaLinear *M;
 
-    printf("Digite o nome da matriz: ");
-    setbuf(stdin, NULL);
-    scanf("%s", mat.nome_matriz);
+    do{
+        printf("Digite o nome da matriz: ");
+        setbuf(stdin, NULL);
+        scanf("%s", mat.nome_matriz);
+    }while(busca_matriz(*N,mat.nome_matriz,&M));
 
     printf("\nO nome da matriz é: %s\n", mat.nome_matriz);
     do
@@ -285,16 +288,20 @@ void operacao_basica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2, char sin
 {
     Matriz resp, m1, m2;
     int i, j;
+    ListaLinear *M;
 
     if ((M1->MD.totalL != M2->MD.totalL) || (M1->MD.totalC != M2->MD.totalC))
     {
         printf("\nMatrizes com dimensões diferentes!\n");
         return;
     }
-    printf("Digite o nome da matriz resposta: ");
-    setbuf(stdin, NULL);
-    scanf("%s", resp.nome_matriz);
 
+    do{
+        printf("Digite o nome da matriz resposta: ");
+        setbuf(stdin, NULL);
+        scanf("%s", resp.nome_matriz);
+    }while(busca_matriz(*N,resp.nome_matriz,&M));
+    
     m1 = M1->MD;
     m2 = M2->MD;
 
@@ -384,10 +391,13 @@ void matriz_transposta(ListaLinear **N, ListaLinear *M)
 {
     Matriz resp, m;
     int i, j;
+    ListaLinear *M2;
 
-    printf("Digite o nome da matriz transposta: ");
-    setbuf(stdin, NULL);
-    scanf("%s", resp.nome_matriz);
+    do{
+        printf("Digite o nome da matriz transposta: ");
+        setbuf(stdin, NULL);
+        scanf("%s", resp.nome_matriz);
+    }while(busca_matriz(*N,resp.nome_matriz,&M2));
 
     m = M->MD;
 
@@ -484,16 +494,19 @@ void multiplica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2)
     Matriz resp, m1, m2;
     int i, j;
     float soma;
+    ListaLinear *M;
 
     if ((M1->MD.totalC != M2->MD.totalL))
     {
         printf("\nNão é possível multiplicar!\n");
         return;
     }
-    printf("Digite o nome da matriz resposta: ");
-    setbuf(stdin, NULL);
-    scanf("%s", resp.nome_matriz);
-
+    
+    do{
+        printf("Digite o nome da matriz resposta: ");
+        setbuf(stdin, NULL);
+        scanf("%s", resp.nome_matriz);
+    }while(busca_matriz(*N,resp.nome_matriz,&M));
     m1 = M1->MD;
     m2 = M2->MD;
 
