@@ -34,6 +34,7 @@ void imprimir_diagonal(ListaLinear *M);
 int destruir_matriz(ListaLinear **N, char *nome_matriz);
 void finaliza_programa(ListaLinear **N);
 void multiplica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2);
+void listarMatrizes(ListaLinear *N);
 
 int main()
 {
@@ -45,7 +46,7 @@ int main()
     {
         printf("\n1.Declarar Matriz\n2.Transpor Matriz\n3.Somar Matrizes\n4.Subtrair Matrizes\n");
         printf("5.Dividir matrizes\n6.Multiplicar Matrizes\n7.Imprimir Diagonal\n8.Imprimir Matriz\n");
-        printf("9.Destruir Matriz\n0.Sair do Programa\nOpc: ");
+        printf("9.Destruir Matriz\n10.Listar matrizes\n0.Sair do Programa\nSelecione uma opção:: ");
         scanf("%d", &opc);
         switch (opc)
         {
@@ -55,7 +56,7 @@ int main()
         case 2:
             do
             {
-                printf("Digite o nome das matrizes: ");
+                printf("Digite o nome das matrizes para transpor: ");
                 setbuf(stdin, NULL);
                 scanf("%s", nome1);
             } while (!busca_matriz(MyList, nome1, &M1));
@@ -64,7 +65,7 @@ int main()
         case 3:
             do
             {
-                printf("Digite o nome das matrizes: ");
+                printf("Digite o nome das matrizes para realizar a operação[nome1 nome2]: ");
                 setbuf(stdin, NULL);
                 scanf("%s %s", nome1, nome2);
             } while (!busca_matriz(MyList, nome1, &M1) || !busca_matriz(MyList, nome2, &M2));
@@ -74,7 +75,7 @@ int main()
         case 4:
             do
             {
-                printf("Digite o nome das matrizes: ");
+                printf("Digite o nome das matrizes para realizar a operação[nome1 nome2]: ");
                 setbuf(stdin, NULL);
                 scanf("%s %s", nome1, nome2);
             } while (!busca_matriz(MyList, nome1, &M1) || !busca_matriz(MyList, nome2, &M2));
@@ -84,7 +85,7 @@ int main()
         case 5:
             do
             {
-                printf("Digite o nome das matrizes: ");
+                printf("Digite o nome das matrizes para realizar a operação[nome1 nome2]: ");
                 setbuf(stdin, NULL);
                 scanf("%s %s", nome1, nome2);
             } while (!busca_matriz(MyList, nome1, &M1) || !busca_matriz(MyList, nome2, &M2));
@@ -92,9 +93,9 @@ int main()
             operacao_basica(&MyList, M1, M2, '/');
             break;
         case 6:
-        do
+            do
             {
-                printf("Digite o nome das matrizes: ");
+                printf("Digite o nome das matrizes para realizar a operação[nome1 nome2]: ");
                 setbuf(stdin, NULL);
                 scanf("%s %s", nome1, nome2);
             } while (!busca_matriz(MyList, nome1, &M1) || !busca_matriz(MyList, nome2, &M2));
@@ -103,14 +104,14 @@ int main()
         case 7:
             do
             {
-                printf("Digite o nome das matrizes: ");
+                printf("Digite o nome da matriz para imprimir a diagonal principal: ");
                 setbuf(stdin, NULL);
                 scanf("%s", nome1);
             } while (!busca_matriz(MyList, nome1, &M1));
             imprimir_diagonal(M1);
             break;
         case 8:
-            printf("Digite o nome da matriz para buscar: ");
+            printf("Digite o nome da matriz para imprimir: ");
             setbuf(stdin, NULL);
             scanf("%s", nome);
             if (!imprime_uma_matriz(MyList, nome))
@@ -127,6 +128,8 @@ int main()
                 printf("Nao encontrado");
             }
             break;
+        case 10:
+            listarMatrizes(MyList);
             break;
         case 0:
             finaliza_programa(&MyList);
@@ -288,7 +291,7 @@ void operacao_basica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2, char sin
         printf("\nMatrizes com dimensões diferentes!\n");
         return;
     }
-    printf("Digite o nome da matriz: ");
+    printf("Digite o nome da matriz resposta: ");
     setbuf(stdin, NULL);
     scanf("%s", resp.nome_matriz);
 
@@ -432,7 +435,7 @@ void imprimir_diagonal(ListaLinear *M)
     }
 }
 
-//PRONTA: Destroi matriz
+//ERRO: Destroi matriz
 int destruir_matriz(ListaLinear **N, char *nome_matriz)
 {
     int achou = 0;
@@ -487,7 +490,7 @@ void multiplica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2)
         printf("\nNão é possível multiplicar!\n");
         return;
     }
-    printf("Digite o nome da matriz: ");
+    printf("Digite o nome da matriz resposta: ");
     setbuf(stdin, NULL);
     scanf("%s", resp.nome_matriz);
 
@@ -514,5 +517,19 @@ void multiplica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2)
     if (!imprime_uma_matriz(*N, resp.nome_matriz))
     {
         printf("Nao achou.");
+    }
+}
+
+//PRONTA: Lista matrizes e dimensões
+void listarMatrizes(ListaLinear *N)
+{
+    ListaLinear *aux;
+    if(N==NULL){
+        printf("\nNão há matrizes\n");
+        return;
+    }
+    for (aux = N; aux != NULL; aux = aux->prox)
+    {
+        printf("\n%s[%dx%d]\n",aux->MD.nome_matriz,aux->MD.totalL,aux->MD.totalC);
     }
 }
