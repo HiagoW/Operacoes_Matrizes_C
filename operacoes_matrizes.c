@@ -31,6 +31,8 @@ void operacao_basica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2, char sin
 int inicializa_matriz_resposta(int lin, int col, Matriz *mat);
 void matriz_transposta(ListaLinear **N, ListaLinear *M);
 void imprimir_diagonal(ListaLinear *M);
+int destruir_matriz(ListaLinear **N, char *nome_matriz);
+void finaliza_programa(ListaLinear **N);
 
 int main()
 {
@@ -109,9 +111,18 @@ int main()
             }
             break;
         case 9:
+            printf("Digite o nome da matriz para destruir: ");
+            setbuf(stdin, NULL);
+            scanf("%s", nome);
+            if (!destruir_matriz(&MyList, nome))
+            {
+                printf("Nao encontrado");
+            }
+            break;
             break;
         case 0:
-            break;
+            finaliza_programa(&MyList);
+            exit(0);
         default:
             break;
         }
@@ -410,5 +421,48 @@ void imprimir_diagonal(ListaLinear *M)
             }
         }
         printf("\n");
+    }
+}
+
+//PRONTA: Destroi matriz
+int destruir_matriz(ListaLinear **N, char *nome_matriz)
+{
+    int achou = 0;
+    ListaLinear *aux, *aux2;
+    aux2=aux;
+    for (aux = *N; aux != NULL; aux = aux->prox)
+    {
+        if (!strcmp(aux->MD.nome_matriz, nome_matriz))
+        {
+            if(aux==(*N)){
+                *N=aux->prox;
+            }else if(aux->prox=NULL){
+                aux2->prox=NULL;
+            }else{
+                aux2->prox=aux->prox;
+            }
+            free(aux->MD.M);
+            free(aux);
+            printf("Matriz destruida!");
+            achou = 1;
+            break;
+        }
+        if(aux!=(*N)){
+            aux2=aux2->prox;
+        }
+    }
+    if (achou)
+        return 1;
+    return 0;
+}
+
+//PRONTA: Destroi todas matrizes
+void finaliza_programa(ListaLinear **N)
+{
+    ListaLinear *aux;
+    for (aux = *N; aux != NULL; aux = aux->prox)
+    {
+        free(aux->MD.M);
+        free(aux);
     }
 }
