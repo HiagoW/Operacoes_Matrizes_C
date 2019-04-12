@@ -116,7 +116,7 @@ int main()
             scanf("%s", nome);
             if (!imprime_uma_matriz(MyList, nome))
             {
-                printf("Nao encontrado");
+                printf("Nao encontrado\n");
             }
             break;
         case 9:
@@ -125,7 +125,7 @@ int main()
             scanf("%s", nome);
             if (!destruir_matriz(&MyList, nome))
             {
-                printf("Nao encontrado");
+                printf("Nao encontrado\n");
             }
             break;
         case 10:
@@ -146,7 +146,7 @@ ListaLinear *Cria_Nodo()
     p = (ListaLinear *)malloc(sizeof(ListaLinear));
     if (!p)
     {
-        printf("Problema de alocação");
+        printf("Problema de alocação\n");
         exit(0);
     }
     return p;
@@ -179,7 +179,7 @@ void declara_matriz(ListaLinear **N)
 
     if (!inicializa_matriz(mat.totalL, mat.totalC, &mat))
     {
-        printf("Erro de alocação!!");
+        printf("Erro de alocação!!\n");
         exit(0);
     }
 
@@ -307,7 +307,7 @@ void operacao_basica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2, char sin
 
     if (!inicializa_matriz_resposta(m1.totalL, m1.totalC, &resp))
     {
-        printf("Erro de alocação!!");
+        printf("Erro de alocação!!\n");
         exit(0);
     }
 
@@ -356,7 +356,7 @@ void operacao_basica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2, char sin
     insere_inicio_lista(N, resp);
     if (!imprime_uma_matriz(*N, resp.nome_matriz))
     {
-        printf("Nao achou.");
+        printf("Nao achou.\n");
     }
 }
 
@@ -403,7 +403,7 @@ void matriz_transposta(ListaLinear **N, ListaLinear *M)
 
     if (!inicializa_matriz_resposta(m.totalC, m.totalL, &resp))
     {
-        printf("Erro de alocação!!");
+        printf("Erro de alocação!!\n");
         exit(0);
     }
 
@@ -416,7 +416,7 @@ void matriz_transposta(ListaLinear **N, ListaLinear *M)
     insere_inicio_lista(N, resp);
     if (!imprime_uma_matriz(*N, resp.nome_matriz))
     {
-        printf("Nao achou.");
+        printf("Nao achou.\n");
     }
 }
 
@@ -445,12 +445,11 @@ void imprimir_diagonal(ListaLinear *M)
     }
 }
 
-//ERRO: Destroi matriz
+//PRONTA: Destroi matriz
 int destruir_matriz(ListaLinear **N, char *nome_matriz)
 {
-    int achou = 0;
     ListaLinear *aux, *aux2;
-    aux2=aux;
+    aux2=*N;
     for (aux = *N; aux != NULL; aux = aux->prox)
     {
         if (!strcmp(aux->MD.nome_matriz, nome_matriz))
@@ -464,16 +463,13 @@ int destruir_matriz(ListaLinear **N, char *nome_matriz)
             }
             free(aux->MD.M);
             free(aux);
-            printf("Matriz destruida!");
-            achou = 1;
-            break;
+            printf("Matriz destruida!\n");
+            return 1;
         }
         if(aux!=(*N)){
             aux2=aux2->prox;
         }
     }
-    if (achou)
-        return 1;
     return 0;
 }
 
@@ -512,7 +508,7 @@ void multiplica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2)
 
     if (!inicializa_matriz_resposta(m1.totalL, m2.totalC, &resp))
     {
-        printf("Erro de alocação!!");
+        printf("Erro de alocação!!\n");
         exit(0);
     }
 
@@ -529,7 +525,7 @@ void multiplica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2)
     insere_inicio_lista(N, resp);
     if (!imprime_uma_matriz(*N, resp.nome_matriz))
     {
-        printf("Nao achou.");
+        printf("Nao achou.\n");
     }
 }
 
