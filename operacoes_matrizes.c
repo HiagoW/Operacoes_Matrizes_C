@@ -32,42 +32,90 @@ int inicializa_matriz_resposta(int lin, int col, Matriz *mat);
 void matriz_transposta(ListaLinear **N, ListaLinear *M);
 void imprimir_diagonal(ListaLinear *M);
 
-void main()
+int main()
 {
-    int ret;
-    char nome1[20], nome2[20], resp;
-
+    int ret, opc;
+    char nome1[20], nome2[20], nome[20], resp;
     ListaLinear *MyList, *M1, *M2;
     inicializa_lista(&MyList);
     do
     {
-        declara_matriz(&MyList);
-        printf("Inserir outra matriz? s/n: ");
-        setbuf(stdin, NULL);
-        scanf("%c", &resp);
-    } while (resp == 's');
-    /*printf("Digite o nome da matriz para buscar: ");
-    setbuf(stdin, NULL);
-    fgets(nome, 19, stdin);
-    if(!imprime_uma_matriz(MyList, nome)){
-        printf("Nao encontrado");
-    }*/
-    /*do
-    {
-        printf("Digite o nome das matrizes: ");
-        setbuf(stdin, NULL);
-        scanf("%s %s", nome1, nome2);
-    } while (!busca_matriz(MyList, nome1, &M1) || !busca_matriz(MyList, nome2, &M2));
+        printf("\n1.Declarar Matriz\n2.Transpor Matriz\n3.Somar Matrizes\n4.Subtrair Matrizes\n");
+        printf("5.Dividir matrizes\n6.Multiplicar Matrizes\n7.Imprimir Diagonal\n8.Imprimir Matriz\n");
+        printf("9.Destruir Matriz\n0.Sair do Programa\nOpc: ");
+        scanf("%d", &opc);
+        switch (opc)
+        {
+        case 1:
+            declara_matriz(&MyList);
+            break;
+        case 2:
+            do
+            {
+                printf("Digite o nome das matrizes: ");
+                setbuf(stdin, NULL);
+                scanf("%s", nome1);
+            } while (!busca_matriz(MyList, nome1, &M1));
+            matriz_transposta(&MyList, M1);
+            break;
+        case 3:
+            do
+            {
+                printf("Digite o nome das matrizes: ");
+                setbuf(stdin, NULL);
+                scanf("%s %s", nome1, nome2);
+            } while (!busca_matriz(MyList, nome1, &M1) || !busca_matriz(MyList, nome2, &M2));
 
-    operacao_basica(&MyList, M1, M2, '+');*/
-    do
-    {
-        printf("Digite o nome da matrizes: ");
-        setbuf(stdin, NULL);
-        scanf("%s", nome1);
-    } while (!busca_matriz(MyList, nome1, &M1));
-    matriz_transposta(&MyList, M1);
-    imprimir_diagonal(M1);
+            operacao_basica(&MyList, M1, M2, '+');
+            break;
+        case 4:
+            do
+            {
+                printf("Digite o nome das matrizes: ");
+                setbuf(stdin, NULL);
+                scanf("%s %s", nome1, nome2);
+            } while (!busca_matriz(MyList, nome1, &M1) || !busca_matriz(MyList, nome2, &M2));
+
+            operacao_basica(&MyList, M1, M2, '-');
+            break;
+        case 5:
+            do
+            {
+                printf("Digite o nome das matrizes: ");
+                setbuf(stdin, NULL);
+                scanf("%s %s", nome1, nome2);
+            } while (!busca_matriz(MyList, nome1, &M1) || !busca_matriz(MyList, nome2, &M2));
+
+            operacao_basica(&MyList, M1, M2, '/');
+            break;
+        case 6:
+            break;
+        case 7:
+            do
+            {
+                printf("Digite o nome das matrizes: ");
+                setbuf(stdin, NULL);
+                scanf("%s", nome1);
+            } while (!busca_matriz(MyList, nome1, &M1));
+            imprimir_diagonal(M1);
+            break;
+        case 8:
+            printf("Digite o nome da matriz para buscar: ");
+            setbuf(stdin, NULL);
+            scanf("%s", nome);
+            if (!imprime_uma_matriz(MyList, nome))
+            {
+                printf("Nao encontrado");
+            }
+            break;
+        case 9:
+            break;
+        case 0:
+            break;
+        default:
+            break;
+        }
+    } while (opc != 0);
 }
 
 ListaLinear *Cria_Nodo()
@@ -116,39 +164,43 @@ void declara_matriz(ListaLinear **N)
 //PRONTA: Aloca memoria para matriz e lê os elementos
 int inicializa_matriz(int lin, int col, Matriz *mat)
 {
-    mat->M = (float **)malloc(lin * sizeof(float));
+    int i, j;
+    float **entrada;
+    entrada = (float **)malloc(lin * sizeof(float));
 
-    if (!mat->M)
+    if (!entrada)
     {
         return 0;
     }
 
-    for (int i = 0; i < lin; i++)
+    for (i = 0; i < lin; i++)
     {
-        *((mat->M) + i) = (float *)malloc(col * sizeof(float));
-        if (!(*((mat->M) + i)))
+        *(entrada + i) = (float *)malloc(col * sizeof(float));
+        if (!*(entrada + i))
         {
             return 0;
         }
     }
 
-    for (int i = 0; i < lin; i++)
+    for (i = 0; i < lin; i++)
     {
-        for (int j = 0; j < col; j++)
+        for (j = 0; j < col; j++)
         {
             printf("Entre com o elemento de %d x %d: ", i, j);
-            scanf("%f", *((mat->M) + i) + j);
+            scanf("%f", *(entrada + i) + j);
         }
     }
+    mat->M = entrada;
     return 1;
 }
 
 //TEMP: Imprime a matriz
 void imprime_matriz(Matriz mat)
 {
-    for (int i = 0; i < mat.totalL; i++)
+    int i, j;
+    for (i = 0; i < mat.totalL; i++)
     {
-        for (int j = 0; j < mat.totalC; j++)
+        for (j = 0; j < mat.totalC; j++)
         {
             printf("%.2f ", *(*((mat.M) + i) + j));
         }
@@ -159,15 +211,9 @@ void imprime_matriz(Matriz mat)
 //PRONTA: Insere matriz no inicio da lista
 void insere_inicio_lista(ListaLinear **N, Matriz matriz)
 {
-    for (int i = 0; i < matriz.totalL; i++)
-    {
-        for (int j = 0; j < matriz.totalC; j++)
-        {
-            printf("%.2f", matriz.M[i][j]);
-        }
-        printf("\n");
-    }
+    int i, j;
     ListaLinear *novo;
+
     novo = Cria_Nodo();
     novo->MD = matriz;
     novo->prox = *N;
@@ -212,17 +258,17 @@ int busca_matriz(ListaLinear *N, char *nome_matriz, ListaLinear **M)
     return 0;
 }
 
-//PROBLEMA: Matriz resposta sai vazia do for
+//PRONTA: Operacoes principais
 void operacao_basica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2, char sinal)
 {
+    Matriz resp, m1, m2;
+    int i, j;
+
     if ((M1->MD.totalL != M2->MD.totalL) || (M1->MD.totalC != M2->MD.totalC))
     {
         printf("\nMatrizes com dimensões diferentes!\n");
         return;
     }
-
-    Matriz resp, m1, m2;
-
     printf("Digite o nome da matriz: ");
     setbuf(stdin, NULL);
     scanf("%s", resp.nome_matriz);
@@ -239,18 +285,22 @@ void operacao_basica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2, char sin
     switch (sinal)
     {
     case '+':
-        for (int i = 0; i < m1.totalL; i++)
+        for (i = 0; i < m1.totalL; i++)
         {
-            for (int j = 0; j < m1.totalC; j++)
+            for (j = 0; j < m1.totalC; j++)
             {
                 resp.M[i][j] = m1.M[i][j] + m2.M[i][j];
-                printf("%.2f", resp.M[i][j]);
             }
         }
         break;
-
-        /* case '-':
-        resp.M[i][j] = m1.M[i][j] - m2.M[i][j];
+    case '-':
+        for (i = 0; i < m1.totalL; i++)
+        {
+            for (j = 0; j < m1.totalC; j++)
+            {
+                resp.M[i][j] = m1.M[i][j] - m2.M[i][j];
+            }
+        }
         break;
     case '/':
         for (int l = 0; l < m1.totalL; l++)
@@ -264,17 +314,14 @@ void operacao_basica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2, char sin
                 }
             }
         }
-        resp.M[i][j] = m1.M[i][j] / m2.M[i][j];
-        break;*/
-    }
-
-    for (int i = 0; i < resp.totalL; i++)
-    {
-        for (int j = 0; j < resp.totalC; j++)
+        for (i = 0; i < m1.totalL; i++)
         {
-            printf("%.2f", resp.M[i][j]);
+            for (j = 0; j < m1.totalC; j++)
+            {
+                resp.M[i][j] = m1.M[i][j] / m2.M[i][j];
+            }
         }
-        printf("\n");
+        break;
     }
 
     insere_inicio_lista(N, resp);
@@ -284,9 +331,14 @@ void operacao_basica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2, char sin
     }
 }
 
-//PRONTA: Inicializa Matriz Transposta
+//PRONTA: Inicializa Matriz Resposta
 int inicializa_matriz_resposta(int lin, int col, Matriz *mat)
 {
+    int i;
+
+    mat->totalL = lin;
+    mat->totalC = col;
+
     mat->M = (float **)malloc(lin * sizeof(float));
 
     if (!mat->M)
@@ -294,7 +346,7 @@ int inicializa_matriz_resposta(int lin, int col, Matriz *mat)
         return 0;
     }
 
-    for (int i = 0; i < lin; i++)
+    for (i = 0; i < lin; i++)
     {
         *((mat->M) + i) = (float *)malloc(col * sizeof(float));
         if (!(*((mat->M) + i)))
@@ -302,12 +354,14 @@ int inicializa_matriz_resposta(int lin, int col, Matriz *mat)
             return 0;
         }
     }
+    return 1;
 }
 
 //PRONTA: Gera Transposta
 void matriz_transposta(ListaLinear **N, ListaLinear *M)
 {
     Matriz resp, m;
+    int i, j;
 
     printf("Digite o nome da matriz transposta: ");
     setbuf(stdin, NULL);
@@ -321,14 +375,10 @@ void matriz_transposta(ListaLinear **N, ListaLinear *M)
         exit(0);
     }
 
-    for (int i = 0; i < m.totalL; i++)
+    for (i = 0; i < m.totalL; i++)
     {
-        for (int j = 0; j < m.totalC; j++)
-        {
-            resp.M[i][j] = m.M[j][i];
-            printf("%.2f", resp.M[i][j]);
-        }
-        printf("\n");
+        for (j = 0; j < m.totalC; j++)
+            resp.M[j][i] = m.M[i][j];
     }
 
     insere_inicio_lista(N, resp);
@@ -342,12 +392,13 @@ void matriz_transposta(ListaLinear **N, ListaLinear *M)
 void imprimir_diagonal(ListaLinear *M)
 {
     Matriz m;
+    int i, j;
 
     m = M->MD;
 
-    for (int i = 0; i < m.totalL; i++)
+    for (i = 0; i < m.totalL; i++)
     {
-        for (int j = 0; j < m.totalC; j++)
+        for (j = 0; j < m.totalC; j++)
         {
             if (i == j)
             {
