@@ -35,6 +35,7 @@ int destruir_matriz(ListaLinear **N, char *nome_matriz);
 void finaliza_programa(ListaLinear **N);
 void multiplica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2);
 void listarMatrizes(ListaLinear *N);
+void liberaMatriz(Matriz *M);
 
 int main()
 {
@@ -461,7 +462,7 @@ int destruir_matriz(ListaLinear **N, char *nome_matriz)
             }else{
                 aux2->prox=aux->prox;
             }
-            free(aux->MD.M);
+            liberaMatriz(&(aux->MD));
             free(aux);
             printf("Matriz destruida!\n");
             return 1;
@@ -479,7 +480,7 @@ void finaliza_programa(ListaLinear **N)
     ListaLinear *aux;
     for (aux = *N; aux != NULL; aux = aux->prox)
     {
-        free(aux->MD.M);
+        liberaMatriz(&(aux->MD));
         free(aux);
     }
 }
@@ -540,5 +541,12 @@ void listarMatrizes(ListaLinear *N)
     for (aux = N; aux != NULL; aux = aux->prox)
     {
         printf("\n%s[%dx%d]\n",aux->MD.nome_matriz,aux->MD.totalL,aux->MD.totalC);
+    }
+}
+
+//PRONTO: Libera uma matriz
+void liberaMatriz(Matriz *M){
+    for(int i=0;i<M->totalL;i++){
+        free(M->M[i]);
     }
 }
