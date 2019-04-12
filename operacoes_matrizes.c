@@ -457,7 +457,7 @@ int destruir_matriz(ListaLinear **N, char *nome_matriz)
         {
             if(aux==(*N)){
                 *N=aux->prox;
-            }else if(aux->prox=NULL){
+            }else if(aux->prox==NULL){
                 aux2->prox=NULL;
             }else{
                 aux2->prox=aux->prox;
