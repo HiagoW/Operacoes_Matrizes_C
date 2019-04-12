@@ -33,6 +33,7 @@ void matriz_transposta(ListaLinear **N, ListaLinear *M);
 void imprimir_diagonal(ListaLinear *M);
 int destruir_matriz(ListaLinear **N, char *nome_matriz);
 void finaliza_programa(ListaLinear **N);
+void multiplica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2);
 
 int main()
 {
@@ -91,6 +92,13 @@ int main()
             operacao_basica(&MyList, M1, M2, '/');
             break;
         case 6:
+        do
+            {
+                printf("Digite o nome das matrizes: ");
+                setbuf(stdin, NULL);
+                scanf("%s %s", nome1, nome2);
+            } while (!busca_matriz(MyList, nome1, &M1) || !busca_matriz(MyList, nome2, &M2));
+            multiplica(&MyList, M1, M2);
             break;
         case 7:
             do
@@ -464,5 +472,47 @@ void finaliza_programa(ListaLinear **N)
     {
         free(aux->MD.M);
         free(aux);
+    }
+}
+
+//PRONTA: Multiplica Matrizes
+void multiplica(ListaLinear **N, ListaLinear *M1, ListaLinear *M2)
+{
+    Matriz resp, m1, m2;
+    int i, j;
+    float soma;
+
+    if ((M1->MD.totalC != M2->MD.totalL))
+    {
+        printf("\nNão é possível multiplicar!\n");
+        return;
+    }
+    printf("Digite o nome da matriz: ");
+    setbuf(stdin, NULL);
+    scanf("%s", resp.nome_matriz);
+
+    m1 = M1->MD;
+    m2 = M2->MD;
+
+    if (!inicializa_matriz_resposta(m1.totalL, m2.totalC, &resp))
+    {
+        printf("Erro de alocação!!");
+        exit(0);
+    }
+
+    for(int i=0;i<m1.totalL;i++){
+        for(int j=0;j<m2.totalC;j++){
+            soma=0;
+            for(int k=0;k<m1.totalC;k++){
+                soma+=m1.M[i][k]*m2.M[k][j];    
+            }
+            resp.M[i][j]=soma;
+        }
+    }
+
+    insere_inicio_lista(N, resp);
+    if (!imprime_uma_matriz(*N, resp.nome_matriz))
+    {
+        printf("Nao achou.");
     }
 }
